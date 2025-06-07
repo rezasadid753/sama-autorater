@@ -37,19 +37,18 @@
             radioLists.forEach(radioList => {
               const firstRadioButton = radioList.querySelector('input[type="radio"]');
               if (firstRadioButton) {
-                console.log('Found radio button:', firstRadioButton);
-                firstRadioButton.checked = true;  // Select the radio button
-                console.log('Radio button checked:', firstRadioButton.checked);
+                // Programmatically check the radio button
+                firstRadioButton.checked = true;
 
-                // Verify if the radio button is actually checked
-                if (firstRadioButton.checked) {
-                  console.log('Radio button is checked!');
-                } else {
-                  console.warn('Radio button is NOT checked after setting checked = true!');
-                }
+                /*
+                  Important:
+                  Simply setting 'checked = true' doesn't always notify the page of the change,
+                  especially if it relies on event listeners to update internal state.
+                  So, we manually dispatch 'change' and 'click' events to ensure the site registers the selection.
+                */
+                firstRadioButton.dispatchEvent(new Event('change', { bubbles: true }));
+                firstRadioButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
-                // Optional: dispatch click event if needed (commented out for caution)
-                // firstRadioButton.dispatchEvent(new Event('click'));
               } else {
                 console.warn('No radio button found in this row!');
               }
