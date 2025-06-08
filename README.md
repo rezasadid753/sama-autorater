@@ -1,98 +1,63 @@
-# 📋 Auto-Rater for End-of-Term Surveys
+# 📋 Auto-Rater Script for SAMA Panel
 
-> ⛓️ A protest script against meaningless bureaucratic rituals in higher education.
+Automatically selects top ratings in course evaluation forms inside the **SAMA Panel**, no more clicking through repetitive questions. Designed for students who want to save time while still fulfilling panel requirements.
 
-## 🎯 Purpose
+---
 
-This script automatically selects the highest rating (typically the first radio button) for every professor/course evaluation form embedded within a university's portal — usually inside an iframe. It’s built for students **forced** to submit evaluations in systems that **ignore** our feedback and treat our time as expendable.
+## 🎯 What It Does
 
-## 🧠 Context
+This JavaScript script runs in your browser and:
 
-Universities often require students to complete end-of-term course evaluations. While in theory this promotes feedback and improvement, in reality:
+* Detects the evaluation form iframe on the page.
+* Every 2 seconds, checks if forms are present or reloaded.
+* Selects the **first radio button** in each group (typically the highest rating).
+* Leaves submission to you, it doesn't auto-submit.
 
-* 🔇 Feedback is rarely, if ever, addressed.
-* 🧾 Evaluations are mandatory gatekeepers, complete them or lose access.
-* 🪤 Students are **coerced** into participation with no guarantee of impact.
+No need to re-run it for each form — it keeps checking and acting as new iframes load.
 
-This script was born out of that frustration, a silent act of resistance through automation!
+---
 
-## ⚖️ Legal & Ethical Notice
+## 💡 How It Works (Technically)
 
-> **⚠️ DISCLAIMER: This repository and its contents are intended solely for educational and expressive purposes.**
+* Targets the first `<iframe>` where evaluation forms are rendered.
+* Uses `querySelectorAll('.radio-list')` to find rating rows.
+* Programmatically checks the first radio input in each group.
+* Dispatches both `change` and `click` events to ensure compatibility with frameworks/listeners.
+* Polls every 2 seconds to adapt to slow loads or dynamic iframe changes.
 
-* This script interacts only with content already loaded in the user's browser.
-* It **does not** circumvent authentication, access restricted data, or manipulate any backend systems.
-* It is **not distributed as a browser extension or hosted service**, it is an open piece of JavaScript the user must consciously run.
-* Use of this script is at your own discretion and risk. The author assumes no responsibility for consequences arising from its use in violation of any institutional policy.
+You can easily customize it:
 
-## 🛠️ How It Works
+* Want to select the *last* radio instead? Change the selector.
+* Want to skip certain questions? Add filters based on text or index.
 
-Every 2 seconds:
-
-* Detects the evaluation iframe.
-* Locates rating options inside.
-* Automatically selects the **first option** in every group (often the maximum rating).
-
-It does **not** submit the form, you’re still in control of that.
+---
 
 ## 🚀 How to Use
 
-This script is tailored specifically for **Tabriz University (SAMA Portal)**, hosted at [amozesh.tabrizu.ac.ir](https://amozesh.tabrizu.ac.ir).
+1. **Login** to [https://amozesh.tabrizu.ac.ir](https://amozesh.tabrizu.ac.ir)
+2. Go to **"ارزشیابی"** from the right-hand menu.
+3. Open **Developer Console** (`F12` or `Ctrl+Shift+I`)
+4. Paste the script and press **Enter**.
+5. Open each evaluation form — the script will auto-mark it.
 
-### 🔧 Step-by-Step Instructions
+If you see a paste-blocking error, type `allow pasting` first.
 
-1. **Login to the SAMA Panel**
-   Open your browser and go to:
-   👉 [https://amozesh.tabrizu.ac.ir](https://amozesh.tabrizu.ac.ir)
-   Log in with your university credentials.
+---
 
-2. **Navigate to the Evaluation Page**
-   Once logged in, on the **right-side menu**, click on:
-   **"ارزشیابی"**
-   (This is the course evaluation section.)
+## 🛑 Why?
 
-3. **Open Developer Tools**
+Universities often mandate evaluations but ignore their content. This script is a way to save your time in a system that doesn't value your effort.
 
-   * On **Desktop**: Press `F12` or `Ctrl+Shift+I` to open Developer Tools, then switch to the **Console** tab.
-   * On **Android (mobile)**: Use browsers like **F12 Browser** that support DevTools.
+---
 
-4. **Paste and Run the Script**
+## ⚠️ Disclaimer
 
-   * Copy the entire JavaScript code from this repo.
+* Educational use only.
+* Does not access private data or submit forms.
+* Runs only in your own browser — no external tracking or backend access.
 
-   * Paste it into the **Console** and press **Enter**.
-
-   > ⚠️ **Important:** If you see an error like
-   > `Uncaught EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' is not allowed...`
-   > Type this into the console first:
-
-   ```js
-   allow pasting
-   ```
-
-   Then paste the script again and hit **Enter**.
-
-5. **Open Each Evaluation Form**
-   Now, open each evaluation form manually — as soon as it loads, the script will automatically mark all **first (usually maximum)** radio buttons in every row.
-
-### ✅ What You Should See
-
-* A console message confirming that the script is running.
-* Radio buttons in each evaluation form **auto-selected** to the highest rating as soon as the form loads.
-* A faster, frustration-free experience.
-
-## 💬 Why?
-
-Because if your voice doesn’t matter to them, why waste your breath?
-
-## 🚨 Institutions: Do Better
-
-* Respect student feedback.
-* Show evidence of acting on evaluations.
-* Stop making evaluation completion a precondition for system access.
-
-Until then, scripts like this will exist, and spread.
+---
 
 ## 📜 License
 
-MIT, because freedom matters.
+MIT — free to use, tweak, and share.
