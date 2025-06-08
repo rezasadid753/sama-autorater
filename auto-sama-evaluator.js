@@ -1,81 +1,70 @@
-(function() {
-  // Flags to track detection and action status
+(function () {
+  // Flags to ensure actions only run once
   let found = false;
   let radioButtonsClicked = false;
 
-  // Main function to check iframe content and select radio buttons
+  // Main routine to check iframe content and auto-select radio buttons
   function checkIframeContent() {
-    // Get all iframes on the page
     const iframes = document.getElementsByTagName('iframe');
 
     if (iframes.length === 0) {
-      console.log('No iframes found on the page.');
+      console.log('%c[INFO] No iframes detected on the page.', 'color: gray; font-style: italic;');
       return;
     }
 
-    // Assume the first iframe contains the evaluation form
-    const iframe = iframes[0];
+    const iframe = iframes[0]; // Assuming first iframe contains the target content
 
-    // Function to perform the radio button selection inside the iframe
     function performCheck() {
       try {
-        // Access iframe's document
         const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-        // Find all elements with class 'radio-list' (each containing radio buttons)
         const radioLists = iframeDocument.querySelectorAll('.radio-list');
 
         if (radioLists.length > 0) {
           if (!found) {
-            console.log('Okay! Radio button rows found in the iframe.');
+            console.log('%c✅ Found radio button sections inside the iframe.', 'color: green; font-weight: bold;');
             found = true;
           }
 
-          // If not already clicked, select the first radio button in each row
           if (!radioButtonsClicked) {
-            console.log('Selecting the first radio button in each row...');
+            console.log('%c➡️ Selecting the first radio button in each group...', 'color: dodgerblue; font-weight: bold;');
+
             radioLists.forEach(radioList => {
               const firstRadioButton = radioList.querySelector('input[type="radio"]');
+
               if (firstRadioButton) {
-                // Programmatically check the radio button
                 firstRadioButton.checked = true;
 
-                /*
-                  Important:
-                  Simply setting 'checked = true' doesn't always notify the page of the change,
-                  especially if it relies on event listeners to update internal state.
-                  So, we manually dispatch 'change' and 'click' events to ensure the site registers the selection.
-                */
+                // Trigger events to mimic real user interaction
                 firstRadioButton.dispatchEvent(new Event('change', { bubbles: true }));
                 firstRadioButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-
               } else {
-                console.warn('No radio button found in this row!');
+                console.warn('%c[WARNING] A radio group was found without any radio button.', 'color: orange;');
               }
             });
 
             radioButtonsClicked = true;
-            console.log('All first radio buttons selected.');
+            console.log('%c🎯 Radio button selection completed successfully.', 'color: limegreen; font-weight: bold;');
           }
         } else {
-          // No radio buttons found yet, reset flags for retry
-          console.log('Radio button rows not found in the iframe yet.');
+          // Reset if radio buttons not yet present
+          console.log('%c[WAIT] Radio button sections not found in the iframe yet.', 'color: goldenrod;');
           found = false;
           radioButtonsClicked = false;
         }
       } catch (e) {
-        console.error('Error accessing iframe content:', e);
+        console.error('%c[ERROR] Failed to access iframe content:', 'color: red; font-weight: bold;', e);
       }
     }
 
-    // Check if iframe content is fully loaded before running the selection
+    // Ensure iframe is loaded before attempting to interact with its contents
     if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
       performCheck();
     } else {
-      console.log('Iframe not yet loaded');
+      console.log('%c[INFO] Iframe content is not fully loaded yet.', 'color: gray; font-style: italic;');
     }
   }
 
-  // Run checkIframeContent every 2 seconds to handle loading delays
+  // Poll every 2 seconds to wait for iframe and content to be ready
   setInterval(checkIframeContent, 2000);
 })();
